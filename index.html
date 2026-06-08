@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FocusList — Productivity System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-icon">&#9830;</span>
+        <h1>FocusList</h1>
+      </div>
+
+      <!-- User Profile -->
+      <section class="profile-section">
+        <div class="avatar" id="avatar">U</div>
+        <div class="profile-info">
+          <span class="profile-name" id="profile-name">User</span>
+          <span class="profile-joined" id="profile-joined">Joined today</span>
+        </div>
+        <button class="profile-edit-btn" id="profile-edit-btn" aria-label="Edit profile">&hellip;</button>
+      </section>
+
+      <!-- Projects -->
+      <section class="sidebar-block">
+        <div class="sidebar-block-header">
+          <h2>Projects</h2>
+          <button class="sidebar-add-btn" id="add-project-btn" aria-label="Add project">+</button>
+        </div>
+        <ul class="project-list" id="project-list">
+          <li class="project-item active" data-project="all">
+            <span class="project-dot" style="background:#6366f1"></span>
+            <span>All Tasks</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Tags -->
+      <section class="sidebar-block">
+        <div class="sidebar-block-header">
+          <h2>Tags</h2>
+          <button class="sidebar-add-btn" id="add-tag-btn" aria-label="Add tag">+</button>
+        </div>
+        <div class="tag-cloud" id="tag-cloud">
+          <span class="tag-pill active" data-tag="all">All</span>
+        </div>
+      </section>
+
+      <!-- Status Filters -->
+      <section class="sidebar-block">
+        <h2>Status</h2>
+        <div class="status-list" id="sidebar-status-list">
+          <button class="status-filter-btn active" data-status="all">All</button>
+          <button class="status-filter-btn" data-status="todo">To Do</button>
+          <button class="status-filter-btn" data-status="in_progress">In Progress</button>
+          <button class="status-filter-btn" data-status="done">Done</button>
+        </div>
+      </section>
+
+      <!-- Context Switcher -->
+      <section class="sidebar-block context-switcher">
+        <h2>Context</h2>
+        <div class="context-buttons" id="context-buttons">
+          <button class="context-btn active" data-view="kanban">Kanban</button>
+          <button class="context-btn" data-view="grid">Grid</button>
+        </div>
+      </section>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-area">
+      <!-- Sticky Control Panel -->
+      <header class="control-panel" id="control-panel">
+        <div class="control-row">
+          <div class="search-wrapper">
+            <span class="search-icon">&#128269;</span>
+            <input type="search" id="global-search" placeholder="Search tasks, projects, tags..." aria-label="Global search">
+          </div>
+          <button class="view-toggle-btn" id="view-toggle" aria-label="Toggle view">&#9776;</button>
+        </div>
+        <div class="control-row quick-add-row">
+          <form id="quick-add-form" class="quick-add-form">
+            <input type="text" id="quick-add-input" placeholder="Quick add task..." aria-label="New task" required>
+            <select id="quick-add-project" aria-label="Project">
+              <option value="">No project</option>
+            </select>
+            <select id="quick-add-priority" aria-label="Priority">
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+              <option value="high">High</option>
+            </select>
+            <button type="submit" id="quick-add-btn">Add</button>
+          </form>
+          <div class="sort-controls">
+            <label for="sort-select">Sort:</label>
+            <select id="sort-select">
+              <option value="created-desc">Newest</option>
+              <option value="created-asc">Oldest</option>
+              <option value="priority">Priority</option>
+              <option value="due-date">Due Date</option>
+            </select>
+          </div>
+        </div>
+      </header>
+
+      <!-- Kanban / Grid View -->
+      <section class="board-container" id="board-container">
+        <!-- Kanban columns rendered by JS -->
+      </section>
+
+      <!-- Analytical Footer -->
+      <footer class="analytics-footer" id="analytics-footer">
+        <!-- Progress -->
+        <div class="footer-block progress-block">
+          <h3>Progress</h3>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progress-bar-fill" style="width:0%"></div>
+          </div>
+          <span class="progress-text" id="progress-text">0 / 0 tasks</span>
+        </div>
+
+        <!-- Focus Timer -->
+        <div class="footer-block timer-block">
+          <h3>Focus Timer</h3>
+          <div class="timer-display" id="timer-display">00:00:00</div>
+          <div class="timer-controls">
+            <button class="timer-btn" id="timer-start-btn">Start</button>
+            <button class="timer-btn timer-btn-reset" id="timer-reset-btn">Reset</button>
+          </div>
+        </div>
+
+        <!-- Streak Badges -->
+        <div class="footer-block streak-block">
+          <h3>Streaks</h3>
+          <div class="streak-badges">
+            <div class="streak-badge">
+              <span class="streak-icon">&#128293;</span>
+              <span class="streak-value" id="current-streak">0</span>
+              <span class="streak-label">day streak</span>
+            </div>
+            <div class="streak-badge">
+              <span class="streak-icon">&#127942;</span>
+              <span class="streak-value" id="longest-streak">0</span>
+              <span class="streak-label">best</span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Templates -->
+  <template id="kanban-column-template">
+    <div class="kanban-column">
+      <div class="kanban-column-header">
+        <h3 class="kanban-column-title"></h3>
+        <span class="kanban-column-count"></span>
+      </div>
+      <div class="kanban-column-body" dropzone="move"></div>
+    </div>
+  </template>
+
+  <template id="task-card-template">
+    <div class="task-card" draggable="true">
+      <div class="card-drag-handle"></div>
+      <div class="card-main">
+        <div class="card-top-row">
+          <span class="card-project-badge"></span>
+          <span class="card-priority-dot"></span>
+          <button class="card-delete-btn" aria-label="Delete task">&times;</button>
+        </div>
+        <p class="card-title"></p>
+        <div class="card-tags"></div>
+        <div class="card-meta">
+          <span class="card-due-date"></span>
+          <span class="card-subtask-count"></span>
+        </div>
+        <!-- Subtask checklist (dropdown) -->
+        <div class="subtask-section">
+          <button class="subtask-toggle-btn">&#9660; Subtasks</button>
+          <div class="subtask-list" style="display:none">
+            <ul class="subtask-items"></ul>
+            <form class="subtask-add-form">
+              <input type="text" class="subtask-add-input" placeholder="Add subtask...">
+              <button type="submit" class="subtask-add-submit">+</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
